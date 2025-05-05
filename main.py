@@ -11,7 +11,7 @@ import os
 
 # ---- KONFIGURACJA ----
 GODZINA = 17  # godzina, o której bot ma pingować (24h format)
-MINUTA = 00  # minuta
+MINUTA = 05  # minuta
 CHANNEL_ID = 1303471531560796180  # ID kanału, gdzie ma wysyłać wiadomość
 # -----------------------
 
