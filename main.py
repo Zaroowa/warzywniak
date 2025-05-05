@@ -8,10 +8,11 @@ import random
 import datetime
 import asyncio
 import os
+import pytz
 
 # ---- KONFIGURACJA ----
 GODZINA = 17  # godzina, o której bot ma pingować (24h format)
-MINUTA = 10  # minuta
+MINUTA = 15  # minuta
 CHANNEL_ID = 1303471531560796180  # ID kanału, gdzie ma wysyłać wiadomość
 # -----------------------
 
@@ -29,7 +30,8 @@ async def on_ready():
 
 @tasks.loop(hours=24)
 async def planowany_ping():
-    now = datetime.datetime.now()
+    tz = pytz.timezone('Europe/Warsaw')
+    now = datetime.datetime.now(tz)
     target = now.replace(hour=GODZINA, minute=MINUTA, second=0, microsecond=0)
 
     if now >= target:
