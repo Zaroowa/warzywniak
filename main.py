@@ -65,4 +65,5 @@ async def cwel(ctx):
     losowy = random.choice(members)
     await ctx.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia!")
 
+print("TOKEN z os.getenv:", os.getenv("TOKEN"))
 bot.run(os.getenv("TOKEN"))
