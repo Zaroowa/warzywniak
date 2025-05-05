@@ -11,8 +11,8 @@ import pytz
 import json
 
 # ---- KONFIGURACJA ----
-GODZINA = 17  # godzina pingowania (24h)
-MINUTA = 15   # minuta pingowania
+GODZINA = 16  # godzina pingowania (24h)
+MINUTA = 0   # minuta pingowania
 CHANNEL_ID = 1303471531560796180
 RANKING_FILE = "ranking.json"
 # -----------------------
