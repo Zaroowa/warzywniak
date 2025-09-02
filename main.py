@@ -9,6 +9,7 @@ import asyncio
 import os
 import pytz
 import json
+import asyncpg
 
 # ---- KONFIGURACJA ----
 GODZINA = 16  # godzina pingowania (24h)
@@ -111,6 +112,13 @@ async def ranking(ctx):
         lines.append(f"{i}. {user.name}#{user.discriminator} - {count} razy")
 
     await ctx.send("🏆 Ranking cweli dnia:\n" + "\n".join(lines))
+
+DB_URL = os.getenv("DATABASE_URL")
+db_pool = None
+
+async def connect_db():
+    global db_pool
+    db_pool = await asyncpg.create_pool(DB_URL)
 
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
