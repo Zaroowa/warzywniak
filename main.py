@@ -15,7 +15,7 @@ import asyncpg
 GODZINA = 16  # godzina pingowania (24h)
 MINUTA = 0    # minuta pingowania
 CHANNEL_ID = 1303471531560796180
-ALLOWED_USERS = [630387902211162122, 388975847396081675]  # <<< wpisz swoje ID albo listę ID
+ALLOWED_USERS = [630387902211162122, 388975847396081675, 304303798766010369]  # <<< wpisz swoje ID albo listę ID
 # -----------------------
 
 intents = discord.Intents.default()
