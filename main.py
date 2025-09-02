@@ -1,3 +1,4 @@
+# bot.py
 from keep_alive import keep_alive
 keep_alive()
 
@@ -8,14 +9,12 @@ import datetime
 import asyncio
 import os
 import pytz
-import json
 import asyncpg
 
 # ---- KONFIGURACJA ----
 GODZINA = 16  # godzina pingowania (24h)
 MINUTA = 0    # minuta pingowania
 CHANNEL_ID = 1303471531560796180
-RANKING_FILE = "ranking.json"
 ALLOWED_USERS = [630387902211162122, 388975847396081675]  # <<< wpisz swoje ID albo listę ID
 # -----------------------
 
@@ -26,25 +25,62 @@ intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Inicjalizacja rankingu
-if not os.path.exists(RANKING_FILE):
-    with open(RANKING_FILE, "w") as f:
-        json.dump({}, f)
-
-def load_ranking():
-    with open(RANKING_FILE, "r") as f:
-        return json.load(f)
-
-def save_ranking(ranking):
-    with open(RANKING_FILE, "w") as f:
-        json.dump(ranking, f, indent=2)
+DB_URL = os.getenv("DATABASE_URL")
+if not DB_URL:
+    print("⚠️ Nie znaleziono DATABASE_URL w zmiennych środowiskowych. Jeśli testujesz lokalnie, ustaw DATABASE_URL.")
+db_pool: asyncpg.pool.Pool | None = None
 
 last_pinged_user_id = None
 
+# --- Połączenie z DB i inicjalizacja tabeli ---
+async def connect_db():
+    global db_pool
+    if db_pool is None:
+        db_pool = await asyncpg.create_pool(DB_URL, min_size=1, max_size=5)
+        print("🔌 Połączono z bazą danych (pool utworzony).")
+
+async def init_db():
+    # utworzenie tabeli jeśli nie istnieje
+    async with db_pool.acquire() as conn:
+        await conn.execute("""
+        CREATE TABLE IF NOT EXISTS ranking (
+            user_id BIGINT PRIMARY KEY,
+            count INT DEFAULT 0
+        )
+        """)
+        print("📦 Tabela 'ranking' sprawdzona/utworzona.")
+
+# --- Funkcje operujące na DB ---
+async def update_ranking(user_id: int):
+    async with db_pool.acquire() as conn:
+        # wstaw lub inkrementuj
+        await conn.execute("""
+        INSERT INTO ranking (user_id, count)
+        VALUES ($1, 1)
+        ON CONFLICT (user_id)
+        DO UPDATE SET count = ranking.count + 1
+        """, user_id)
+
+async def load_ranking_dict():
+    async with db_pool.acquire() as conn:
+        rows = await conn.fetch("SELECT user_id, count FROM ranking")
+        return {str(r['user_id']): r['count'] for r in rows}
+
+async def load_top_n(n=10):
+    async with db_pool.acquire() as conn:
+        rows = await conn.fetch("SELECT user_id, count FROM ranking ORDER BY count DESC LIMIT $1", n)
+        return [(r['user_id'], r['count']) for r in rows]
+
+# --- Events / Tasks ---
 @bot.event
 async def on_ready():
-    await connect_db()
     print(f"✅ Zalogowano jako {bot.user}")
+    # Połącz do DB i inicjalizuj tabelę
+    if DB_URL:
+        await connect_db()
+        await init_db()
+    else:
+        print("⚠️ DATABASE_URL nie ustawione — bot będzie działać bez DB (brak zapisu rankingu).")
     planowany_ping.start()
 
 # 🔄 Sprawdzanie co minutę
@@ -55,7 +91,6 @@ async def planowany_ping():
     tz = pytz.timezone('Europe/Warsaw')
     now = datetime.datetime.now(tz)
 
-    # sprawdzamy czy jest ustawiona godzina i minuta
     if now.hour == GODZINA and now.minute == MINUTA:
         channel = bot.get_channel(CHANNEL_ID)
         if channel is None:
@@ -71,9 +106,10 @@ async def planowany_ping():
         losowy = random.choice(members)
         last_pinged_user_id = losowy.id
 
-        ranking = load_ranking()
-        ranking[str(losowy.id)] = ranking.get(str(losowy.id), 0) + 1
-        save_ranking(ranking)
+        if db_pool:
+            await update_ranking(losowy.id)
+        else:
+            print("⚠️ DB niedostępna — nie zapisano do rankingu.")
 
         await channel.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia! 💀")
 
@@ -92,38 +128,42 @@ async def cwel(ctx):
 
     losowy = random.choice(members)
 
-    ranking = load_ranking()
-    ranking[str(losowy.id)] = ranking.get(str(losowy.id), 0) + 1
-    save_ranking(ranking)
+    if db_pool:
+        await update_ranking(losowy.id)
 
     await ctx.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia! 💀")
 
 # 📊 Ranking
 @bot.command()
 async def ranking(ctx):
-    ranking = load_ranking()
-    if not ranking:
+    if not db_pool:
+        await ctx.send("Ranking niedostępny — baza danych niepodłączona.")
+        return
+
+    top = await load_top_n(10)
+    if not top:
         await ctx.send("Brak danych w rankingu.")
         return
 
-    sorted_ranking = sorted(ranking.items(), key=lambda x: x[1], reverse=True)
     lines = []
-    for i, (user_id, count) in enumerate(sorted_ranking[:10], 1):
-        user = await bot.fetch_user(int(user_id))
-        lines.append(f"{i}. {user.name}#{user.discriminator} - {count} razy")
+    for i, (user_id, count) in enumerate(top, 1):
+        try:
+            user = await bot.fetch_user(int(user_id))
+            lines.append(f"{i}. {user.name}#{user.discriminator} - {count} razy")
+        except Exception:
+            lines.append(f"{i}. {user_id} - {count} razy (nieznany użytkownik)")
 
     await ctx.send("🏆 Ranking cweli dnia:\n" + "\n".join(lines))
-
-DB_URL = os.getenv("DATABASE_URL")
-db_pool = None
-
-async def connect_db():
-    global db_pool
-    db_pool = await asyncpg.create_pool(DB_URL)
 
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
 if not token:
     raise RuntimeError("❌ Brak zmiennej środowiskowej TOKEN!")
 
-bot.run(token)
+try:
+    bot.run(token)
+finally:
+    # przy zamykaniu aplikacji możesz dodatkowo zamknąć pool (Railway to zrestartuje i tak)
+    if db_pool is not None:
+        # Nie możemy awaitować tu (outside async), ale pool zostanie czyszczony przy proces exit.
+        pass
