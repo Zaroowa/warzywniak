@@ -172,6 +172,7 @@ async def on_message(message: discord.Message):
 
     # Bardzo ważne — przepuść wiadomość dalej do komend bota
     await bot.process_commands(message)
+    print(os.listdir("."))  # wypisze pliki w katalogu bota
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
 if not token:
