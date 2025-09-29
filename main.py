@@ -154,7 +154,24 @@ async def ranking(ctx):
             lines.append(f"{i}. {user_id} - {count} razy (nieznany użytkownik)")
 
     await ctx.send("🏆 Ranking cweli dnia:\n" + "\n".join(lines))
+# --- WYSYŁANIE ZDJECIA NA "IGOR" ---
+# 📸 Reakcja na słowo "igor"
+@bot.event
+async def on_message(message: discord.Message):
+    if message.author.bot:
+        return  # ignoruj wiadomości od botów
 
+    # Jeśli wiadomość zawiera słowo "igor" (niezależnie od wielkości liter)
+    if message.content.lower().strip() == "igor":
+        # podaj ścieżkę lokalną lub link do zdjęcia
+        image_path = "igor.gif"  # <- np. w tym samym folderze co bot.py
+        if os.path.exists(image_path):
+            await message.channel.send(file=discord.File(image_path))
+        else:
+            await message.channel.send("🖼️ Nie znaleziono pliku igor.jpg!")
+
+    # Bardzo ważne — przepuść wiadomość dalej do komend bota
+    await bot.process_commands(message)
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
 if not token:
