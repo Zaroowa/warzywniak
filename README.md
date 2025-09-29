@@ -9,3 +9,4 @@ Bot do Discorda, który codziennie pingnie losowego użytkownika na wybranym kan
 - `igor` - wysyła obrazek "IGOR CWEL" po napisaniu słowa "igor" na czacie
 - `cry` - wysyła obrazek "CRY" po napisaniu słowa "cry" na czacie
 - `rolas` - wysyła obrazek "ŚWINKI" po napisaniu słowa "rolas" na czacie
+- `smaczki` - wysyła obrazek "BYŁY SMAKI?" po napisaniu słowa "smaczki" na czacie
