@@ -8,3 +8,4 @@ Bot do Discorda, który codziennie pingnie losowego użytkownika na wybranym kan
 - `!ranking` - pokazuje ranking najczęściej wylosowanych osób
 - `igor` - wysyła obrazek "IGOR CWEL" po napisaniu słowa "igor" na czacie
 - `cry` - wysyła obrazek "CRY" po napisaniu słowa "cry" na czacie
+- `rolas` - wysyła obrazek "ŚWINKI" po napisaniu słowa "rolas" na czacie
