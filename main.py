@@ -184,7 +184,15 @@ async def on_message(message: discord.Message):
         if os.path.exists(image_path):
             await message.channel.send(file=discord.File(image_path))
         else:
-            await message.channel.send("😢 Nie znaleziono pliku rolas.gif!")
+            await message.channel.send("🐽 Nie znaleziono pliku rolas.gif!")
+
+      # --- SMACZKI ---
+    elif content == "smaczki":
+        image_path = "smaczki.gif"  # ścieżka do obrazka smaczki.gif
+        if os.path.exists(image_path):
+            await message.channel.send(file=discord.File(image_path))
+        else:
+            await message.channel.send("🦴 Nie znaleziono pliku smaczki.gif!")
             
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
