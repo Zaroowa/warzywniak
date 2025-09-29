@@ -178,6 +178,14 @@ async def on_message(message: discord.Message):
         else:
             await message.channel.send("😢 Nie znaleziono pliku cry.gif!")
 
+     # --- ROLAS ---
+    elif content == "rolas":
+        image_path = "rolas.gif"  # ścieżka do obrazka rolas.gif
+        if os.path.exists(image_path):
+            await message.channel.send(file=discord.File(image_path))
+        else:
+            await message.channel.send("😢 Nie znaleziono pliku rolas.gif!")
+            
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
     print(os.listdir("."))  # wypisze pliki w katalogu bota
