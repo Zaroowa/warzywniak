@@ -168,7 +168,7 @@ async def on_message(message: discord.Message):
         if os.path.exists(image_path):
             await message.channel.send(file=discord.File(image_path))
         else:
-            await message.channel.send("🖼️ Nie znaleziono pliku igor.jpg!")
+            await message.channel.send("🖼️ Nie znaleziono pliku igor.gif!")
 
     # Bardzo ważne — przepuść wiadomość dalej do komend bota
     await bot.process_commands(message)
