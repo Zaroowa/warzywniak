@@ -11,3 +11,5 @@ Bot do Discorda, który codziennie pingnie losowego użytkownika na wybranym kan
 - `rolas` - wysyła obrazek "ŚWINKI" po napisaniu słowa "rolas" na czacie
 - `smaczki` - wysyła obrazek "BYŁY SMAKI?" po napisaniu słowa "smaczki" na czacie
 - `zjeb` - pinguje LUTSa po napisaniu słowa "zjeb" na czacie
+- `do szkoly gowniarzu` - pinguje HANWANa po napisaniu słowa "do szkoly gowniarzu" na czacie
+- `@asalwar` - wysyła emotke wózkowego po pingnieciu krzeła
