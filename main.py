@@ -205,6 +205,18 @@ elif content.startswith("zjeb"):
         )
     else:
         await message.channel.send("@luts5708")
+        
+    # --- ZJEB ---
+elif content.startswith("do szkoly gowniarzu"):
+    # sprawdź, czy ktoś został wspomniany w wiadomości
+    if message.mentions:
+        target = message.mentions[0]
+        await message.channel.send(
+            f"{target.mention}, zostałeś wygoniony do szkółki przez {message.author.mention} 👮",
+            allowed_mentions=discord.AllowedMentions(users=True)
+        )
+    else:
+        await message.channel.send("@papa_smurfers")
             
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
