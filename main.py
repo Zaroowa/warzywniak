@@ -201,7 +201,7 @@ async def on_message(message: discord.Message):
             target = message.mentions[0]
             await message.channel.send(f"{target.mention}, zostałeś nazwany zjebem przez {message.author.mention} 💀")
         else:
-            await message.channel.send("❗ Użycie: `@luts5708`")
+            await message.channel.send("@luts5708")
             
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
