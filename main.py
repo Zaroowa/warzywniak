@@ -194,41 +194,33 @@ async def on_message(message: discord.Message):
         else:
             await message.channel.send("🦴 Nie znaleziono pliku smaczki.gif!")
 
-        # --- ZJEB ---
-    elif content == "zjeb":
-        # sprawdź, czy ktoś został wspomniany w wiadomości
-        if message.mentions:
-            target = message.mentions[0]
-            await message.channel.send(
-                f"{target.mention}, zostałeś nazwany zjebem przez {message.author.mention} 💀",
-                allowed_mentions=discord.AllowedMentions(users=True)
-            )
-        else:
-            await message.channel.send("@luts5708")
+            # --- ZJEB ---
+    elif content == "cpun":
+        # ID użytkownika, którego bot ma pingować
+        target_id = 393531629731315722  # ← zmień na właściwe ID
+        target = await bot.fetch_user(target_id)
+        await message.channel.send(
+            f"{target.mention}, zostałeś nazwany zjebem przez {message.author.mention} 💀",
+            allowed_mentions=discord.AllowedMentions(users=True)
+        )
         
         # --- HANWAN ---
     elif content == "do szkoly gowniarzu":
-        # sprawdź, czy ktoś został wspomniany w wiadomości
-        if message.mentions:
-            target = message.mentions[0]
-            await message.channel.send(
-                f"{target.mention}, zostałeś wygoniony do szkółki przez {message.author.mention} 👮",
-                  allowed_mentions=discord.AllowedMentions(users=True)
-            )
-        else:
-            await message.channel.send("@papa_smurfers")
+        # ID użytkownika, którego bot ma pingować
+        target_id = 714341935363391532  # ← zmień na właściwe ID
+        target = await bot.fetch_user(target_id)
+        await message.channel.send(
+            f"{target.mention}, zostałeś wygoniony do szkółki przez {message.author.mention} 👑",
+            allowed_mentions=discord.AllowedMentions(users=True)
+        )
 
         # --- KRZEŁO ---
-    elif content == "@asalwar":
-        # sprawdź, czy ktoś został wspomniany w wiadomości
-        if message.mentions:
-            target = message.mentions[0]
-            await message.channel.send(
-                f"{target.mention}, zostałeś nazwany inwalidą przez {message.author.mention} 🧑‍🦽",
-                allowed_mentions=discord.AllowedMentions(users=True)
-            )
-        else:
-            await message.channel.send("🧑‍🦽")
+        # 🧑‍🦽‍➡️ reakcja na ping konkretnej osoby
+        # ID osoby, której ping ma wywoływać reakcję bota
+    monitored_id = 1384921756313063426  # ← wpisz tutaj ID osoby, której ping ma aktywować emotkę
+
+    if any(user.id == monitored_id for user in message.mentions):
+        await message.channel.send("🧑‍🦽‍➡️")
         
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
