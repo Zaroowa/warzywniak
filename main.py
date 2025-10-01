@@ -193,6 +193,15 @@ async def on_message(message: discord.Message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("🦴 Nie znaleziono pliku smaczki.gif!")
+
+    # --- ZJEB ---
+    elif content.startswith("zjeb"):
+        # sprawdź, czy ktoś został wspomniany w wiadomości
+        if message.mentions:
+            target = message.mentions[0]
+            await message.channel.send(f"{target.mention}, zostałeś nazwany zjebem przez {message.author.mention} 💀")
+        else:
+            await message.channel.send("❗ Użycie: `@luts5708`")
             
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
