@@ -194,7 +194,7 @@ async def on_message(message: discord.Message):
         else:
             await message.channel.send("🦴 Nie znaleziono pliku smaczki.gif!")
 
-            # --- ZJEB ---
+     # --- LUTS ---
     elif content == "cpun":
         # ID użytkownika, którego bot ma pingować
         target_id = 393531629731315722  # ← zmień na właściwe ID
@@ -204,7 +204,7 @@ async def on_message(message: discord.Message):
             allowed_mentions=discord.AllowedMentions(users=True)
         )
         
-        # --- HANWAN ---
+     # --- HANWAN ---
     elif content == "do szkoly gowniarzu":
         # ID użytkownika, którego bot ma pingować
         target_id = 714341935363391532  # ← zmień na właściwe ID
@@ -214,7 +214,7 @@ async def on_message(message: discord.Message):
             allowed_mentions=discord.AllowedMentions(users=True)
         )
 
-        # --- KRZEŁO ---
+    # --- KRZEŁO ---
         # 🧑‍🦽‍➡️ reakcja na ping konkretnej osoby
         # ID osoby, której ping ma wywoływać reakcję bota
     monitored_id = 1384921756313063426  # ← wpisz tutaj ID osoby, której ping ma aktywować emotkę
@@ -225,6 +225,7 @@ async def on_message(message: discord.Message):
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
     print(os.listdir("."))  # wypisze pliki w katalogu bota
+    
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
 if not token:
