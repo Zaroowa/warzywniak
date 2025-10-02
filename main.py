@@ -233,7 +233,7 @@ async def on_message(message: discord.Message):
 
     # --- KRZYS ---
     elif content == "krzys":
-        image_path = krzys.gif"  # ścieżka do obrazka krzys.gif
+        image_path = "krzys.gif"  # ścieżka do obrazka krzys.gif
         if os.path.exists(image_path):
             await message.channel.send(file=discord.File(image_path))
         else:
