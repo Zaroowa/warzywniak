@@ -221,6 +221,15 @@ async def on_message(message: discord.Message):
 
     if any(user.id == monitored_id for user in message.mentions):
         await message.channel.send("🧑‍🦽‍➡️")
+
+    # --- DZIM ---
+    if content == "dzim":
+        image_path = "dzim.png"  # ścieżka do obrazka dzim.png
+        if os.path.exists(image_path):
+            await message.channel.send(file=discord.File(image_path))
+            await message.channel.send("Trzymam ich chłopaki!! 🤓")  # ← tekst po obrazku
+        else:
+            await message.channel.send("🖼️ Nie znaleziono pliku dzim.png!")
         
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
