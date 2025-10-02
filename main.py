@@ -200,7 +200,7 @@ async def on_message(message: discord.Message):
         target_id = 393531629731315722  # ← zmień na właściwe ID
         target = await bot.fetch_user(target_id)
         await message.channel.send(
-            f"{target.mention}, zostałeś nazwany zjebem przez swojego Pana 💀",
+            f"{target.mention}, zostałeś nazwany ćpunem przez swojego Pana 💀",
             allowed_mentions=discord.AllowedMentions(users=True)
         )
         
