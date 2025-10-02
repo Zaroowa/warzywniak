@@ -13,4 +13,5 @@ Bot do Discorda, który codziennie pingnie losowego użytkownika na wybranym kan
 - `cpun` - pinguje LUTSa po napisaniu słowa "cpun" na czacie
 - `do szkoly gowniarzu` - pinguje HANWANa po napisaniu słowa "do szkoly gowniarzu" na czacie
 - `@asalwar` - wysyła emotke wózkowego po pingnieciu krzeła
-- `dzim` - wysyła obrazek "TRZYMAM ICH!" z tekstem na na czacie
+- `dzim` - wysyła obrazek "TRZYMAM ICH!" z tekstem na czacie
+- `krzys` - wysyła obrazek "ESTROGEN" na czacie
