@@ -205,7 +205,7 @@ async def on_message(message: discord.Message):
         )
         
      # --- HANWAN ---
-    elif content == "do szkoly gowniarzu":
+    elif content == "do szkoly gowniarzu" or content == "do szkoły gówniarzu":
         # ID użytkownika, którego bot ma pingować
         target_id = 714341935363391532  # ← zmień na właściwe ID
         target = await bot.fetch_user(target_id)
