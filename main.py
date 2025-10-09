@@ -238,6 +238,14 @@ async def on_message(message: discord.Message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("😢 Nie znaleziono pliku krzys.gif!")
+            
+    # --- ZELWES ---
+        # 🧑‍🦽‍➡️ reakcja na ping konkretnej osoby
+        # ID osoby, której ping ma wywoływać reakcję bota
+    monitored_id = 346327527909883914  # ← wpisz tutaj ID osoby, której ping ma aktywować emotkę
+
+    if any(user.id == monitored_id for user in message.mentions):
+        await message.channel.send("Hej kolego, masz błędny nick! Twój poprawny nick to **Cwelwes** 🤓")
         
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
