@@ -252,14 +252,11 @@ async def on_message(message: discord.Message):
     print(os.listdir("."))  # wypisze pliki w katalogu bota
 
  # --- KUBAKSI ---
-    elif any(user.mention in content for user in message.mentions):
-        # ID użytkownika, którego chcesz, żeby bot reagował po zpingowaniu
-        target_id = 816391222960062464  # ← podmień na ID osoby
-        if any(mention.id == target_id for mention in message.mentions):
-            procent = random.randint(0, 100)
-            await message.channel.send(
-                f"Dzisiaj procent smaczków na kica wynosi: {procent}% 🍪🐇"
-            )
+elif any(mention.id == 816391222960062464 for mention in message.mentions):
+    procent = random.randint(0, 100)
+    await message.channel.send(
+        f"Dzisiaj procent smaczków na kica wynosi: {procent}% 🍪🐇"
+    )
             
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
