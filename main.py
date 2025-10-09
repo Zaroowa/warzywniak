@@ -220,7 +220,7 @@ async def on_message(message: discord.Message):
     monitored_id = 1384921756313063426  # ← wpisz tutaj ID osoby, której ping ma aktywować emotkę
 
     if any(user.id == monitored_id for user in message.mentions):
-        await message.channel.send("🧑‍🦽‍➡️")
+        await message.channel.send("WRUUUM na dwóch kółkach do roboty, dzisiaj tylko 16h🧑‍🦽‍➡️🧑‍🦽‍➡️🧑‍🦽‍➡️")
 
     # --- DZIM ---
     if content == "dzim":
