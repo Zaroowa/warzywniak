@@ -261,7 +261,7 @@ async def krzelo_ping():
     now = datetime.datetime.now(tz)
 
     # Dni tygodnia: poniedziałek = 0, niedziela = 6
-    if now.weekday() < 5 and now.hour == 0 and now.minute == 35:
+    if now.weekday() < 5 and now.hour == 0 and now.minute == 40:
         channel = bot.get_channel(1303471531560796180)
         if channel is None:
             print("❌ Nie znaleziono kanału dla krzelo_ping.")
