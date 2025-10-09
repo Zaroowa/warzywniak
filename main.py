@@ -246,17 +246,17 @@ async def on_message(message: discord.Message):
 
     if any(user.id == monitored_id for user in message.mentions):
         await message.channel.send("Hej kolego, masz błędny nick! Twój poprawny nick to **Cwelwes** 🤓")
-        
+
+    # --- KUBAKSI ---
+    elif any(mention.id == 816391222960062464 for mention in message.mentions):
+        procent = random.randint(0, 100)
+        await message.channel.send(
+            f"Dzisiaj procent smaczków na kica wynosi: {procent}% 🍪🐇"
+        )
+
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
     print(os.listdir("."))  # wypisze pliki w katalogu bota
-
- # --- KUBAKSI ---
-elif any(mention.id == 816391222960062464 for mention in message.mentions):
-    procent = random.randint(0, 100)
-    await message.channel.send(
-        f"Dzisiaj procent smaczków na kica wynosi: {procent}% 🍪🐇"
-    )
             
 # --- URUCHAMIANIE BOTA ---
 token = os.getenv("TOKEN")
