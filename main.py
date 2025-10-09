@@ -82,6 +82,7 @@ async def on_ready():
     else:
         print("⚠️ DATABASE_URL nie ustawione — bot będzie działać bez DB (brak zapisu rankingu).")
     planowany_ping.start()
+    krzelo_ping.start()
 
 # 🔄 Sprawdzanie co minutę
 @tasks.loop(minutes=1)
@@ -154,6 +155,36 @@ async def ranking(ctx):
             lines.append(f"{i}. {user_id} - {count} razy (nieznany użytkownik)")
 
     await ctx.send("🏆 Ranking cweli dnia:\n" + "\n".join(lines))
+
+# 🔔 Ping o 4:00 w dni robocze
+@tasks.loop(minutes=1)
+async def krzelo_ping():
+    tz = pytz.timezone('Europe/Warsaw')
+    now = datetime.datetime.now(tz)
+
+    # Dni tygodnia: poniedziałek = 0, niedziela = 6
+    if now.weekday() < 5 and now.hour == 0 and now.minute == 48:
+        channel = bot.get_channel(1303471531560796180)
+        if channel is None:
+            print("❌ Nie znaleziono kanału dla krzelo_ping.")
+            return
+
+        target_id = 1384921756313063426  # 🔁 podmień na ID krzeła
+        target = await bot.fetch_user(target_id)
+
+        image_path = "adios.png"  # obrazek z folderu bota
+        if os.path.exists(image_path):
+            await channel.send(
+                f"{target.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższą krajową! 🧑‍🦽‍➡️",
+                file=discord.File(image_path),
+                allowed_mentions=discord.AllowedMentions(users=True)
+            )
+        else:
+            await channel.send(
+                f"{target.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższą krajową! 🧑‍🦽‍➡️ (brak obrazka)",
+                allowed_mentions=discord.AllowedMentions(users=True)
+            )
+            
 # 📸 Reakcja na słowo
 @bot.event
 async def on_message(message: discord.Message):
@@ -253,35 +284,6 @@ async def on_message(message: discord.Message):
         await message.channel.send(
             f"Dzisiaj procent smaczków na kica wynosi: {procent}% 🍪🐇"
         )
-
-    # 🔔 Ping o 4:00 w dni robocze
-@tasks.loop(minutes=1)
-async def krzelo_ping():
-    tz = pytz.timezone('Europe/Warsaw')
-    now = datetime.datetime.now(tz)
-
-    # Dni tygodnia: poniedziałek = 0, niedziela = 6
-    if now.weekday() < 5 and now.hour == 0 and now.minute == 40:
-        channel = bot.get_channel(1303471531560796180)
-        if channel is None:
-            print("❌ Nie znaleziono kanału dla krzelo_ping.")
-            return
-
-        target_id = 1384921756313063426  # 🔁 podmień na ID krzeła
-        target = await bot.fetch_user(target_id)
-
-        image_path = "adios.png"  # obrazek z folderu bota
-        if os.path.exists(image_path):
-            await channel.send(
-                f"{target.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższa krajową! 🧑‍🦽‍➡️",
-                file=discord.File(image_path),
-                allowed_mentions=discord.AllowedMentions(users=True)
-            )
-        else:
-            await channel.send(
-                f"{target.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższa krajową! 🧑‍🦽‍➡️ (brak obrazka)",
-                allowed_mentions=discord.AllowedMentions(users=True)
-            )
 
     # przepuszczanie wiadomości do innych komend (!ranking itd.)
     await bot.process_commands(message)
