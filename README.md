@@ -16,3 +16,4 @@ Bot do Discorda, który codziennie pingnie losowego użytkownika na wybranym kan
 - `dzim` - wysyła obrazek "TRZYMAM ICH!" z tekstem na czacie
 - `krzys` - wysyła obrazek "ESTROGEN" na czacie
 - `@zelwees` - wysyła wiadomość tekstową po pingnieciu zelwesa
+- `@kubaksi` - wysyła losowy procent na smaczki na kica na czacie
