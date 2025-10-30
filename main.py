@@ -14,8 +14,9 @@ import asyncpg
 # ---- KONFIGURACJA ----
 GODZINA = 16  # godzina pingowania (24h)
 MINUTA = 0    # minuta pingowania
-CHANNEL_ID = 1303471531560796180
-ALLOWED_USERS = [630387902211162122, 388975847396081675, 304303798766010369]  # <<< wpisz swoje ID albo listę ID
+CWEL_CHANNEL_ID = 1303471531560796180  # ← kanał, gdzie działa komenda !cwel
+BOT_CHANNEL_ID = 1325976696788353165   # ← kanał, gdzie bot reaguje na wiadomości i pingi
+ALLOWED_USERS = [630387902211162122, 388975847396081675, 304303798766010369, 495334844088451083, 1253834602724982785, 714341935363391532, 703166818847555605, 319810513536286720]  # <<< wpisz swoje ID albo listę ID
 # -----------------------
 
 intents = discord.Intents.default()
@@ -114,9 +115,12 @@ async def planowany_ping():
 
         await channel.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia! 💀")
 
-# 🔒 Komenda z uprawnieniami na ID
+# 🔒 Uprawnienia do !cwel
 @bot.command()
 async def cwel(ctx):
+    if ctx.channel.id != CWEL_CHANNEL_ID:
+        return  # komenda !cwel działa tylko w jednym kanale
+        
     if ctx.author.id not in ALLOWED_USERS:
         await ctx.send("❌ Nie masz uprawnień do używania tej komendy!")
         return
@@ -190,6 +194,10 @@ async def krzelo_ping():
 async def on_message(message: discord.Message):
     if message.author.bot:
         return  # ignoruj wiadomości od botów
+
+    # reaguj tylko na jednym kanale
+    if message.channel.id != BOT_CHANNEL_ID:
+        return
 
     content = message.content.lower().strip()
 
