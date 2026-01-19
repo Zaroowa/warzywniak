@@ -85,6 +85,7 @@ async def on_ready():
         print("⚠️ DATABASE_URL nie ustawione — bot będzie działać bez DB.")
     planowany_ping.start()
     krzelo_ping.start()
+    krzeloo_ping.start()
 
 
 # 🔄 Ping losowej osoby o określonej godzinie
@@ -197,7 +198,7 @@ async def krzeloo_ping():
     tz = pytz.timezone('Europe/Warsaw')
     now = datetime.datetime.now(tz)
 
-    if now.weekday() < 5 and now.hour == 15 and now.minute == 22:
+    if now.weekday() < 5 and now.hour == 15 and now.minute == 30:
         channel = bot.get_channel(BOT_CHANNEL_ID)
         if channel is None:
             print("❌ Nie znaleziono kanału dla krzeloo_ping.")
