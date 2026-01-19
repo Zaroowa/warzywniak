@@ -232,13 +232,18 @@ async def on_message(message: discord.Message):
 
     content = message.content.lower().strip()
 
-    # --- SMAKI (tylko w CWEL_CHANNEL_ID) ---
-    if message.channel.id == CWEL_CHANNEL_ID and content == "smaki":
-        procent = random.randint(0, 100)
-        await message.channel.send(
-            f"Dzisiaj procent smaczków na tytany wynosi: {procent}% 🍬"
-        )
+    # --- SMAKI (tylko w CWEL_CHANNEL_ID, tylko ALLOWED_USERS) ---
+if message.channel.id == CWEL_CHANNEL_ID and content == "smaki":
+
+    if message.author.id not in ALLOWED_USERS:
+        await message.channel.send("❌ Nie masz uprawnień do używania tej komendy!")
         return
+
+    procent = random.randint(0, 100)
+    await message.channel.send(
+        f"Dzisiaj procent smaczków na tytany wynosi: {procent}% 🍬"
+    )
+    return
 
     # Reaguj tylko w BOT_CHANNEL_ID
     if message.channel.id != BOT_CHANNEL_ID:
