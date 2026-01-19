@@ -198,7 +198,7 @@ async def krzeloo_ping():
     tz = pytz.timezone('Europe/Warsaw')
     now = datetime.datetime.now(tz)
 
-    if now.weekday() < 5 and now.hour == 15 and now.minute == 30:
+    if now.weekday() < 5 and now.hour == 20 and now.minute == 0:
         channel = bot.get_channel(BOT_CHANNEL_ID)
         if channel is None:
             print("❌ Nie znaleziono kanału dla krzeloo_ping.")
