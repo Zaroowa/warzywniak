@@ -191,6 +191,35 @@ async def krzelo_ping():
             )
 
 
+# 🔔 Ping o 20:00 w dni robocze
+@tasks.loop(minutes=1)
+async def krzeloo_ping():
+    tz = pytz.timezone('Europe/Warsaw')
+    now = datetime.datetime.now(tz)
+
+    if now.weekday() < 5 and now.hour == 15 and now.minute == 22:
+        channel = bot.get_channel(BOT_CHANNEL_ID)
+        if channel is None:
+            print("❌ Nie znaleziono kanału dla krzeloo_ping.")
+            return
+
+        target_id = 1384921756313063426  # ID Krzeła
+        target = await bot.fetch_user(target_id)
+        image_path = "krzeloo.png"
+
+        if os.path.exists(image_path):
+            await channel.send(
+                f"{target.mention} Gratulacje! Właśnie odjebałeś podwójną zmianę jak typowy ukr! 🧑‍🦽‍➡️",
+                file=discord.File(image_path),
+                allowed_mentions=discord.AllowedMentions(users=True)
+            )
+        else:
+            await channel.send(
+                f"{target.mention} Gratulacje! Właśnie odjebałeś podwójną zmianę jak typowy ukr! 🧑‍🦽‍➡️ (brak obrazka) ",
+                allowed_mentions=discord.AllowedMentions(users=True)
+            )
+
+
 # 📸 Reakcje bota — tylko na jednym kanale
 @bot.event
 async def on_message(message: discord.Message):
@@ -200,11 +229,19 @@ async def on_message(message: discord.Message):
     # ZAWSZE przepuszczaj komendy (!cwel, !ranking itd.)
     await bot.process_commands(message)
 
+    content = message.content.lower().strip()
+
+    # --- SMAKI (tylko w CWEL_CHANNEL_ID) ---
+    if message.channel.id == CWEL_CHANNEL_ID and content == "smaki":
+        procent = random.randint(0, 100)
+        await message.channel.send(
+            f"Dzisiaj procent smaczków na tytany wynosi: {procent}% 🍬"
+        )
+        return
+
     # Reaguj tylko w BOT_CHANNEL_ID
     if message.channel.id != BOT_CHANNEL_ID:
         return
-
-    content = message.content.lower().strip()
 
     # --- IGOR ---
     if content == "igor":
@@ -255,11 +292,11 @@ async def on_message(message: discord.Message):
         )
 
     # --- KRZEŁO ---
-    if any(user.id == 1384921756313063426 for user in message.mentions):
+    elif any(user.id == 1384921756313063426 for user in message.mentions):
         await message.channel.send("WRUUUM na dwóch kółkach do roboty, dzisiaj tylko 16h🧑‍🦽‍➡️🧑‍🦽‍➡️🧑‍🦽‍➡️")
 
     # --- DZIM ---
-    if content == "dzim":
+    elif content == "dzim":
         image_path = "dzim.png"
         if os.path.exists(image_path):
             await message.channel.send(file=discord.File(image_path))
@@ -276,15 +313,8 @@ async def on_message(message: discord.Message):
             await message.channel.send("😢 Nie znaleziono pliku krzys.gif!")
 
     # --- ZELWES ---
-    if any(user.id == 346327527909883914 for user in message.mentions):
+    elif any(user.id == 346327527909883914 for user in message.mentions):
         await message.channel.send("Hej kolego, masz błędny nick! Twój poprawny nick to **Cwelwes** 🤓")
-
-    # --- KUBAKSI ---
-    elif any(mention.id == 816391222960062464 for mention in message.mentions):
-        procent = random.randint(0, 100)
-        await message.channel.send(
-            f"Dzisiaj procent smaczków na kica wynosi: {procent}% 🍪🐇"
-        )
 
 
 # --- URUCHAMIANIE BOTA ---
