@@ -4,6 +4,7 @@ keep_alive()
 
 import discord
 from discord.ext import commands, tasks
+from dyktanda import DYKTANDA
 import random
 import datetime
 import os
@@ -15,6 +16,10 @@ GODZINA = 16
 MINUTA = 0
 CWEL_CHANNEL_ID = 1303471531560796180
 BOT_CHANNEL_ID = 1325976696788353165
+DYKTANDO_CHANNEL_ID = 1325976696788353165
+DYKTANDO_USER_ID = 807664458058825729
+DYKTANDO_HOUR = 17
+DYKTANDO_MINUTE = 40
 
 ALLOWED_USERS = [
     630387902211162122, 388975847396081675, 304303798766010369,
@@ -77,10 +82,11 @@ async def on_ready():
     if DB_URL:
         await connect_db()
         await init_db()
-
-    planowany_ping.start()
-    krzelo_ping.start()
-    krzeloo_ping.start()
+        
+krzelo_ping.start()
+krzeloo_ping.start()
+dyktando_ping.start()
+planowany_ping.start()
 
 
 # --- PLANOWANY CWEL ---
@@ -147,7 +153,7 @@ async def ranking(ctx):
     await ctx.send("🏆 Ranking cweli dnia:\n" + "\n".join(lines))
 
 
-# --- 4:00 ---
+# --- KRZEŁO DO ROBOTY ---
 @tasks.loop(minutes=1)
 async def krzelo_ping():
     tz = pytz.timezone("Europe/Warsaw")
@@ -159,7 +165,7 @@ async def krzelo_ping():
         await channel.send(f"{user.mention} Wstawaj Krzeło! 🧑‍🦽‍➡️")
 
 
-# --- 20:00 ---
+# --- KRZEŁO Z ROBOTY ---
 @tasks.loop(minutes=1)
 async def krzeloo_ping():
     tz = pytz.timezone("Europe/Warsaw")
@@ -170,6 +176,25 @@ async def krzeloo_ping():
         user = await bot.fetch_user(1384921756313063426)
         await channel.send(f"{user.mention} Gratulacje! 🧑‍🦽‍➡️")
 
+# --- DAMIAN ---
+@tasks.loop(minutes=1)
+async def dyktando_ping():
+    tz = pytz.timezone("Europe/Warsaw")
+    now = datetime.datetime.now(tz)
+
+    if now.hour == DYKTANDO_HOUR and now.minute == DYKTANDO_MINUTE:
+        channel = bot.get_channel(DYKTANDO_CHANNEL_ID)
+        if not channel:
+            print("❌ Nie znaleziono kanału.")
+            return
+
+        user = await bot.fetch_user(DYKTANDO_USER_ID)
+        tekst = random.choice(DYKTANDA)
+
+        await channel.send(
+            f"{user.mention}\n{tekst}",
+            allowed_mentions=discord.AllowedMentions(users=True)
+        )
 
 # --- WIADOMOŚCI ---
 @bot.event
