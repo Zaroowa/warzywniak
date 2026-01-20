@@ -32,7 +32,3 @@ DYKTANDA = [
 	"📘 Dyktando: _ółw _arł _urawin_ w d_dżu.",
 	"📘 Dyktando: C_rz_szcz brzmi w trzc_nie.",
 ]
-
-
-
-]
