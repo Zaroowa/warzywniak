@@ -64,7 +64,7 @@ async def krzelo_morning(bot):
     user = await bot.fetch_user(KRZELO_ID)
     await send_image(
         channel,
-        f"{user.mention} Wstawaj Krzeło! 🧑‍🦽‍➡️",
+        f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania!🧑‍🦽‍➡️",
         "adios.png"
     )
 
@@ -75,7 +75,7 @@ async def krzelo_evening(bot):
     user = await bot.fetch_user(KRZELO_ID)
     await send_image(
         channel,
-        f"{user.mention} Gratulacje! 🧑‍🦽‍➡️",
+        f"{user.mention} Gratulacje! Właśnie odjebałeś podwójna zmianę jak typowy Ukrainiec!🧑‍🦽‍➡️",
         "krzeloo.png"
     )
 
@@ -86,10 +86,10 @@ async def test_all(bot):
     
     # 1️⃣ Ping poranny
     user = await bot.fetch_user(KRZELO_ID)
-    await send_image(channel, f"{user.mention} Wstawaj Krzeło! 🧑‍🦽‍➡️", "adios.png")
+    await send_image(channel, f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania!🧑‍🦽‍➡️", "adios.png")
     
     # 2️⃣ Ping wieczorny
-    await send_image(channel, f"{user.mention} Gratulacje! 🧑‍🦽‍➡️", "krzeloo.png")
+    await send_image(channel, f"{user.mention} Gratulacje! Właśnie odjebałeś podwójna zmianę jak typowy Ukrainiec!🧑‍🦽‍➡️", "krzeloo.png")
     
     # 3️⃣ Dyktando
     dyktando_user = await bot.fetch_user(DYKTANDO_USER_ID)
