@@ -1,21 +1,13 @@
 from discord.ext import tasks
 from utils import get_now, send_image
+import random
 from dyktanda import DYKTANDA
 from db import update_ranking
-import random
-import os
 
 LAST_RUN = {}
+
 TASKS = []
 
-BOT_CHANNEL_ID = 1325976696788353165
-KRZELO_ID = 1384921756313063426
-DYKTANDO_USER_ID = 807664458058825729
-DYKTANDO_CHANNEL_ID = 1325976696788353165
-DYKTANDO_HOUR = 17
-DYKTANDO_MINUTE = 45
-
-# ---- TASK HELPER ----
 def get_tasks():
     return TASKS
 
@@ -38,64 +30,56 @@ def task(name, hour, minute, weekdays=False):
         return func
     return decorator
 
-async def run_task(bot, name):
-    task_obj = find_task(name)
-    if not task_obj:
-        return False, "Nie znaleziono taska"
-    await task_obj["func"](bot)
-    return True, f"Task `{name}` uruchomiony ręcznie"
-
-# ---- SCHEDULER LOOP ----
 @tasks.loop(minutes=1)
 async def scheduler(bot):
     now = get_now()
+
     for t in TASKS:
         if not t["enabled"]:
             continue
+
         if now.hour != t["hour"] or now.minute != t["minute"]:
             continue
+
         if t["weekdays"] and now.weekday() >= 5:
             continue
+
         key = (t["name"], now.date())
         if LAST_RUN.get(key):
             continue
+
         await t["func"](bot)
         LAST_RUN[key] = True
 
-# ---- TASKS ----
+# ---------------------- KONFIG ----------------------
+BOT_CHANNEL_ID = 1325976696788353165
+KRZELO_ID = 1384921756313063426
+DYKTANDO_USER_ID = 807664458058825729
+# -----------------------------------------------------
+
+# 🔔 Ping poranny 4:00
 @task("krzelo_morning", 4, 0, weekdays=True)
 async def krzelo_morning(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
     await send_image(
         channel,
-        f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższą krajową! 🧑‍🦽‍➡️",
+        f"{user.mention} Wstawaj Krzeło! 🧑‍🦽‍➡️",
         "adios.png"
     )
 
+# 🔔 Ping wieczorny 20:00
 @task("krzelo_evening", 20, 0, weekdays=True)
 async def krzelo_evening(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
     await send_image(
         channel,
-        f"{user.mention} Gratulacje! Właśnie odjebałeś podwójną zmianę jak typowy ukr! 🧑‍🦽‍➡️",
+        f"{user.mention} Gratulacje! 🧑‍🦽‍➡️",
         "krzeloo.png"
     )
 
-@task("dyktando", DYKTANDO_HOUR, DYKTANDO_MINUTE)
-async def dyktando_task(bot):
-    channel = bot.get_channel(DYKTANDO_CHANNEL_ID)
-    if not channel:
-        print("❌ Nie znaleziono kanału do dyktanda")
-        return
-    user = await bot.fetch_user(DYKTANDO_USER_ID)
-    tekst = random.choice(DYKTANDA)
-    await channel.send(
-        f"{user.mention}\n{tekst}",
-        allowed_mentions=discord.AllowedMentions(users=True)
-    )
-
+# ---------------------- TASK TESTOWY ----------------------
 @task("test_all", 0, 0)  # godzina/minuta są ignorowane, wywołasz ręcznie
 async def test_all(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
@@ -116,3 +100,12 @@ async def test_all(bot):
     for img in ["igor.gif", "cry.gif", "rolas.gif", "smaczki.gif", "dzim.png", "krzys.gif"]:
         if os.path.exists(img):
             await channel.send(file=discord.File(img))
+
+# ---------------------- URUCHAMIANIE TASKÓW RĘCZNIE ----------------------
+async def run_task(bot, name):
+    task = find_task(name)
+    if not task:
+        return False, "Nie znaleziono taska"
+
+    await task["func"](bot)
+    return True, f"Task `{name}` uruchomiony ręcznie"
