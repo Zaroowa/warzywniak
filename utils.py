@@ -1,4 +1,3 @@
-# utils.py
 import datetime
 import pytz
 import os
