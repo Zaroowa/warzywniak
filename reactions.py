@@ -60,9 +60,3 @@ async def handle_reactions(bot, message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("😢 Nie znaleziono pliku krzys.gif!")
-
-    # --- ZELWES ---
-    elif any(user.id == 346327527909883914 for user in message.mentions):
-        await message.channel.send(
-            "Hej kolego, masz błędny nick! Twój poprawny nick to **Cwelwes** 🤓"
-        )
