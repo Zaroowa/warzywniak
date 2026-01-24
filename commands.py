@@ -23,6 +23,17 @@ def setup(bot):
 async def tasks(ctx, action=None, task_name=None):
     tasks_list = get_tasks()
 
+    # -------- OGRANICZENIE DOSTĘPU --------
+ALLOWED_ROLE_NAME = ["Rada", "Fuhrer"]        # nazwa roli, która może używać !tasks
+ALLOWED_USER_ID = 1464679842107621488  # ID użytkownika, który może używać !tasks
+
+# sprawdzenie uprawnień
+has_role = any(role.name == ALLOWED_ROLES for role in ctx.author.roles)
+if not has_role and ctx.author.id != ALLOWED_USER_ID:
+    await ctx.send("❌ Nie masz uprawnień do używania tej komendy!")
+    return
+    # -------------------------------------
+
     # !tasks
     if action is None:
         lines = ["📋 **Taski:**"]
