@@ -9,6 +9,15 @@ LAST_RUN = {}
 
 TASKS = []
 
+def get_tasks():
+    return TASKS
+
+def find_task(name):
+    for t in TASKS:
+        if t["name"] == name:
+            return t
+    return None
+
 def task(name, hour, minute, weekdays=False):
     def decorator(func):
         TASKS.append({
@@ -65,3 +74,11 @@ async def krzelo_evening(bot):
         f"{user.mention} Gratulacje! 🧑‍🦽‍➡️",
         "krzeloo.png"
     )
+
+async def run_task(bot, name):
+    task = find_task(name)
+    if not task:
+        return False, "Nie znaleziono taska"
+
+    await task["func"](bot)
+    return True, f"Task `{name}` uruchomiony ręcznie"
