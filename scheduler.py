@@ -30,6 +30,9 @@ def task(name, hour, minute, weekdays=False):
         return func
     return decorator
 
+BOT_CHANNEL_ID = 1325976696788353165
+KRZELO_ID = 1384921756313063426
+
 @tasks.loop(minutes=1)
 async def scheduler(bot):
     now = get_now()
@@ -50,9 +53,6 @@ async def scheduler(bot):
 
         await t["func"](bot)
         LAST_RUN[key] = True
-
-  BOT_CHANNEL_ID = 1325976696788353165
-  KRZELO_ID = 1384921756313063426
 
 @task("krzelo_morning", 4, 0, weekdays=True)
 async def krzelo_morning(bot):
