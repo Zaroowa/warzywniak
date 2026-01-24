@@ -1,4 +1,4 @@
-# commands.py
+from scheduler import get_tasks, find_task, run_task
 from discord.ext import commands
 from db import update_ranking, load_top_n
 import random
