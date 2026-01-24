@@ -4,27 +4,6 @@ import discord
 async def handle_reactions(bot, message):
     content = message.content.lower().strip()
 
-    gifs = {
-        "igor": "igor.gif",
-        "cry": "cry.gif",
-        "rolas": "rolas.gif",
-        "smaczki": "smaczki.gif",
-        "krzys": "krzys.gif"
-    }
-
-    if content in gifs:
-        path = gifs[content]
-        if os.path.exists(path):
-            await message.channel.send(file=discord.File(path))
-        return
-
-# reactions.py
-import os
-import discord
-
-async def handle_reactions(bot, message):
-    content = message.content.lower().strip()
-
     # --- IGOR ---
     if content == "igor":
         image_path = "igor.gif"
@@ -56,7 +35,6 @@ async def handle_reactions(bot, message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("🦴 Nie znaleziono pliku smaczki.gif!")
-        )
 
     # --- HANWAN ---
     elif content in ["do szkoly gowniarzu", "do szkoły gówniarzu"]:
@@ -82,4 +60,9 @@ async def handle_reactions(bot, message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("😢 Nie znaleziono pliku krzys.gif!")
+
+    # --- ZELWES ---
+    elif any(user.id == 346327527909883914 for user in message.mentions):
+        await message.channel.send(
+            "Hej kolego, masz błędny nick! Twój poprawny nick to **Cwelwes** 🤓"
         )
