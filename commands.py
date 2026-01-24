@@ -27,7 +27,7 @@ def setup(bot):
 
         # ---- OGRANICZENIE DOSTĘPU ----
         ALLOWED_ROLE_NAMES = ["Rada", "Fuhrer"]        # nazwa roli, która może używać !tasks
-        ALLOWED_USER_ID = 1464679842107621488  # ID użytkownika, który może używać !tasks
+        ALLOWED_USER_ID = 388975847396081675  # ID użytkownika, który może używać !tasks
 
         has_role = any(role.name in ALLOWED_ROLE_NAMES for role in ctx.author.roles)
         if not has_role and ctx.author.id != ALLOWED_USER_ID:
