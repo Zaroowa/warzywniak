@@ -1,6 +1,7 @@
 from keep_alive import keep_alive
 keep_alive()
 
+import os
 import discord
 from discord.ext import commands
 from scheduler import scheduler
@@ -13,6 +14,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
+    await bot.wait_until_ready()
     await connect_db()
     await init_db()
     scheduler.start(bot)
