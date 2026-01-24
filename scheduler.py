@@ -4,10 +4,19 @@ import random
 from dyktanda import DYKTANDA
 from db import update_ranking
 
+# --------------------------------------
+# ZMIENNE GLOBALNE
+# --------------------------------------
 LAST_RUN = {}
-
 TASKS = []
 
+BOT_CHANNEL_ID = 1325976696788353165
+KRZELO_ID = 1384921756313063426
+CWEL_CHANNEL_ID = 1303471531560796180
+
+# --------------------------------------
+# FUNKCJE TASKÓW
+# --------------------------------------
 def get_tasks():
     return TASKS
 
@@ -18,6 +27,7 @@ def find_task(name):
     return None
 
 def task(name, hour, minute, weekdays=False):
+    """Dekorator do tworzenia tasków"""
     def decorator(func):
         TASKS.append({
             "name": name,
@@ -30,17 +40,17 @@ def task(name, hour, minute, weekdays=False):
         return func
     return decorator
 
+# --------------------------------------
+# GŁÓWNY SCHEDULER
+# --------------------------------------
 @tasks.loop(minutes=1)
 async def scheduler(bot):
     now = get_now()
-
     for t in TASKS:
         if not t["enabled"]:
             continue
-
         if now.hour != t["hour"] or now.minute != t["minute"]:
             continue
-
         if t["weekdays"] and now.weekday() >= 5:
             continue
 
@@ -51,57 +61,63 @@ async def scheduler(bot):
         await t["func"](bot)
         LAST_RUN[key] = True
 
-# ---------------------- KONFIG ----------------------
-BOT_CHANNEL_ID = 1325976696788353165
-KRZELO_ID = 1384921756313063426
-DYKTANDO_USER_ID = 807664458058825729
-# -----------------------------------------------------
+# --------------------------------------
+# TASKI
+# --------------------------------------
 
-# 🔔 Ping poranny 4:00
+# Krzeło rano
 @task("krzelo_morning", 4, 0, weekdays=True)
 async def krzelo_morning(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
     await send_image(
         channel,
-        f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania!🧑‍🦽‍➡️",
+        f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższą krajową! 🧑‍🦽‍➡️",
         "adios.png"
     )
 
-# 🔔 Ping wieczorny 20:00
+# Krzeło wieczorem
 @task("krzelo_evening", 20, 0, weekdays=True)
 async def krzelo_evening(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
     await send_image(
         channel,
-        f"{user.mention} Gratulacje! Właśnie odjebałeś podwójna zmianę jak typowy Ukrainiec!🧑‍🦽‍➡️",
+        f"{user.mention} Gratulacje! Właśnie odjebałeś podwójną zmianę jak typowy Ukr! 🧑‍🦽‍➡️",
         "krzeloo.png"
     )
 
-# ---------------------- TASK TESTOWY ----------------------
-@task("test_all", 0, 0)  # godzina/minuta są ignorowane, wywołasz ręcznie
-async def test_all(bot):
-    channel = bot.get_channel(BOT_CHANNEL_ID)
-    
-    # 1️⃣ Ping poranny
-    user = await bot.fetch_user(KRZELO_ID)
-    await send_image(channel, f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania!🧑‍🦽‍➡️", "adios.png")
-    
-    # 2️⃣ Ping wieczorny
-    await send_image(channel, f"{user.mention} Gratulacje! Właśnie odjebałeś podwójna zmianę jak typowy Ukrainiec!🧑‍🦽‍➡️", "krzeloo.png")
-    
-    # 3️⃣ Dyktando
-    dyktando_user = await bot.fetch_user(DYKTANDO_USER_ID)
-    tekst = random.choice(DYKTANDA)
-    await channel.send(f"{dyktando_user.mention}\n{tekst}")
-    
-    # 4️⃣ Test reakcji z obrazkami
-    for img in ["igor.gif", "cry.gif", "rolas.gif", "smaczki.gif", "dzim.png", "krzys.gif"]:
-        if os.path.exists(img):
-            await channel.send(file=discord.File(img))
+# Automatyczne !cwel codziennie o 16:00
+@task("cwel_automatyczne", 16, 0)
+async def cwel_automatyczne(bot):
+    channel = bot.get_channel(CWEL_CHANNEL_ID)
+    if not channel:
+        print("❌ Nie znaleziono kanału dla automatycznego !cwel")
+        return
 
-# ---------------------- URUCHAMIANIE TASKÓW RĘCZNIE ----------------------
+    members = [m for m in channel.guild.members if not m.bot]
+    if not members:
+        return
+
+    user = random.choice(members)
+    await update_ranking(user.id)
+    await channel.send(f"{user.mention}, zostałeś wybrany na cwela dnia! 💀")
+
+# Dyktando
+@task("dyktando", 18, 0)
+async def dyktando(bot):
+    channel = bot.get_channel(CWEL_CHANNEL_ID)
+    if not channel:
+        print("❌ Nie znaleziono kanału dla dyktanda")
+        return
+
+    user = await bot.fetch_user(807664458058825729)
+    tekst = random.choice(DYKTANDA)
+    await channel.send(f"{user.mention}\n{tekst}", allowed_mentions=discord.AllowedMentions(users=True))
+
+# --------------------------------------
+# URUCHAMIANIE TASKA RĘCZNIE
+# --------------------------------------
 async def run_task(bot, name):
     task = find_task(name)
     if not task:
