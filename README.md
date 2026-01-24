@@ -13,3 +13,4 @@ Bot do Discorda, który codziennie pingnie losowego użytkownika na wybranym kan
 - `do szkoly gowniarzu` (niezależnie od polskich znaków)- pinguje HANWANa po napisaniu słowa "do szkoly gowniarzu" na czacie
 - `dzim` - wysyła obrazek "TRZYMAM ICH!" z tekstem na czacie
 - `krzys` - wysyła obrazek "ESTROGEN" na czacie
+- - `smaki` - losuje procent smaków na tytany
