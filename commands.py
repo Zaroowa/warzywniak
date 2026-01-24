@@ -18,3 +18,40 @@ def setup(bot):
             user = await bot.fetch_user(uid)
             msg += f"{i}. {user.name} - {count}\n"
         await ctx.send(msg)
+
+@bot.command()
+async def tasks(ctx, action=None, task_name=None):
+    tasks_list = get_tasks()
+
+    # !tasks
+    if action is None:
+        lines = ["📋 **Taski:**"]
+        for t in tasks_list:
+            status = "🟢" if t["enabled"] else "🔴"
+            days = "dni robocze" if t["weekdays"] else "codziennie"
+            lines.append(
+                f"{status} `{t['name']}` — {t['hour']:02d}:{t['minute']:02d} ({days})"
+            )
+        await ctx.send("\n".join(lines))
+        return
+
+    # !tasks off <name> / on <name>
+    if action in ("off", "on") and task_name:
+        task = find_task(task_name)
+        if not task:
+            await ctx.send("❌ Nie znaleziono takiego taska")
+            return
+
+        task["enabled"] = action == "on"
+        await ctx.send(
+            f"✅ Task `{task_name}` {'włączony' if task['enabled'] else 'wyłączony'}"
+        )
+        return
+
+    # !tasks run <name>
+    if action == "run" and task_name:
+        ok, msg = await run_task(ctx.bot, task_name)
+        await ctx.send("✅ " + msg if ok else "❌ " + msg)
+        return
+
+    await ctx.send("❓ Użycie: `!tasks`, `!tasks on/off <nazwa>`, `!tasks run <nazwa>`")
