@@ -1,4 +1,3 @@
-# scheduler.py
 from discord.ext import tasks
 from utils import get_now, send_image
 import random
