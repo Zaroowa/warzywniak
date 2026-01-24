@@ -82,5 +82,4 @@ async def handle_reactions(bot, message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("😢 Nie znaleziono pliku krzys.gif!")
-
         )
