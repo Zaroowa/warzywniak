@@ -95,3 +95,24 @@ async def dyktando_task(bot):
         f"{user.mention}\n{tekst}",
         allowed_mentions=discord.AllowedMentions(users=True)
     )
+
+@task("test_all", 0, 0)  # godzina/minuta są ignorowane, wywołasz ręcznie
+async def test_all(bot):
+    channel = bot.get_channel(BOT_CHANNEL_ID)
+    
+    # 1️⃣ Ping poranny
+    user = await bot.fetch_user(KRZELO_ID)
+    await send_image(channel, f"{user.mention} Wstawaj Krzeło! 🧑‍🦽‍➡️", "adios.png")
+    
+    # 2️⃣ Ping wieczorny
+    await send_image(channel, f"{user.mention} Gratulacje! 🧑‍🦽‍➡️", "krzeloo.png")
+    
+    # 3️⃣ Dyktando
+    dyktando_user = await bot.fetch_user(DYKTANDO_USER_ID)
+    tekst = random.choice(DYKTANDA)
+    await channel.send(f"{dyktando_user.mention}\n{tekst}")
+    
+    # 4️⃣ Test reakcji z obrazkami
+    for img in ["igor.gif", "cry.gif", "rolas.gif", "smaczki.gif", "dzim.png", "krzys.gif"]:
+        if os.path.exists(img):
+            await channel.send(file=discord.File(img))
