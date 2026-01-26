@@ -14,7 +14,7 @@ CWEL_CHANNEL_ID = 1303471531560796180
 async def cwel(ctx):
     # Sprawdzenie kanału
     if ctx.channel.id != CWEL_CHANNEL_ID:
-        await ctx.send(f"❌ Komenda `!cwel` działa tylko na tym kanale!")
+        await ctx.send(f"❌ Komenda `!cwel` działa tylko na tym kanale: <#1303471531560796180>!")
         return
 
     # sprawdzenie uprawnień takie same jak w !tasks
@@ -32,9 +32,19 @@ async def cwel(ctx):
 
 
 # --- !SMAKI ---
+@commands.cooldown(1, 3600, commands.BucketType.user)
 async def smaki(ctx):
     procent = random.randint(0, 100)
     await ctx.send(f"Dzisiaj procent smaczków: {procent}% 🍬")
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        minutes = int(error.retry_after // 60)
+        seconds = int(error.retry_after % 60)
+        await ctx.send(
+            f"⏳ Spokojnie! `!smaki` będzie dostępne za **{minutes}m {seconds}s**."
+        )
 
 
 # --- !RANKING ---
