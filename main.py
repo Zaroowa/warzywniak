@@ -27,5 +27,14 @@ async def on_message(message):
     await handle_reactions(bot, message)
     await bot.process_commands(message)
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        minutes = int(error.retry_after // 60)
+        seconds = int(error.retry_after % 60)
+        await ctx.send(
+            f"⏳ `!smaki` będzie dostępne za **{minutes}m {seconds}s**"
+        )
+
 cmd.setup(bot)
 bot.run(os.getenv("TOKEN"))
