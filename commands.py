@@ -1,3 +1,4 @@
+print("📦 commands.py ZAŁADOWANY")
 import random
 from discord.ext import commands
 from db import update_ranking, load_top_n
@@ -108,3 +109,8 @@ def setup(bot):
     bot.add_command(commands.Command(smaki))
     bot.add_command(commands.Command(ranking))
     bot.add_command(commands.Command(tasks))
+    print("🧩 setup(bot) URUCHOMIONY")
+
+    @bot.command(name="tasks")
+        async def tasks(ctx):
+            await ctx.send("✅ !tasks działa")
