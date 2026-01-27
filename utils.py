@@ -1,12 +1,11 @@
 import datetime
-import pytz
 import os
-import discord
-
-TZ = pytz.timezone("Europe/Warsaw")
+import pytz
 
 def get_now():
-    return datetime.datetime.now(TZ)
+    tz_name = os.getenv("TZ", "Europe/Warsaw")
+    tz = pytz.timezone(tz_name)
+    return datetime.datetime.now(tz)
 
 async def send_image(channel, text, image_path=None, mention=None):
     if image_path and os.path.exists(image_path):
