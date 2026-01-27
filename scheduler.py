@@ -46,12 +46,18 @@ def task(name, hour, minute, weekdays=False):
 @tasks.loop(minutes=1)
 async def scheduler(bot):
     now = get_now()
+
     for t in TASKS:
         if not t["enabled"]:
             continue
-        if now.hour != t["hour"] or now.minute != t["minute"]:
-            continue
+
         if t["weekdays"] and now.weekday() >= 5:
+            continue
+
+        if not (
+            now.hour == t["hour"]
+            and t["minute"] <= now.minute <= t["minute"] + 1
+        ):
             continue
 
         key = (t["name"], now.date())
