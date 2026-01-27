@@ -131,3 +131,5 @@ async def run_task(bot, name):
 
     await task["func"](bot)
     return True, f"Task `{name}` uruchomiony ręcznie"
+
+print("🕒 TERAZ:", now.strftime("%Y-%m-%d %H:%M:%S"))
