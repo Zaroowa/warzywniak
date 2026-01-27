@@ -1,6 +1,8 @@
-from discord.ext import tasks
-from utils import get_now, send_image
+import discord
 import random
+from discord.ext import tasks
+
+from utils import get_now, send_image
 from dyktanda import DYKTANDA
 from db import update_ranking
 
@@ -15,7 +17,7 @@ KRZELO_ID = 1384921756313063426
 CWEL_CHANNEL_ID = 1303471531560796180
 
 # --------------------------------------
-# FUNKCJE TASKÓW
+# FUNKCJE POMOCNICZE
 # --------------------------------------
 def get_tasks():
     return TASKS
@@ -46,6 +48,7 @@ def task(name, hour, minute, weekdays=False):
 @tasks.loop(minutes=1)
 async def scheduler(bot):
     now = get_now()
+    print("🕒 scheduler tick:", now.strftime("%Y-%m-%d %H:%M"))
 
     for t in TASKS:
         if not t["enabled"]:
@@ -64,6 +67,7 @@ async def scheduler(bot):
         if LAST_RUN.get(key):
             continue
 
+        print(f"▶️ URUCHAMIAM TASK: {t['name']}")
         await t["func"](bot)
         LAST_RUN[key] = True
 
@@ -71,29 +75,31 @@ async def scheduler(bot):
 # TASKI
 # --------------------------------------
 
-# Krzeło rano
+# 🔔 Krzeło rano — 4:00 (dni robocze)
 @task("krzelo_morning", 4, 0, weekdays=True)
 async def krzelo_morning(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
+
     await send_image(
         channel,
         f"{user.mention} Wstawaj Krzeło! Dzisiaj tylko 16h do odjebania za najniższą krajową! 🧑‍🦽‍➡️",
         "adios.png"
     )
 
-# Krzeło wieczorem
+# 🔔 Krzeło wieczorem — 20:00 (dni robocze)
 @task("krzelo_evening", 20, 0, weekdays=True)
 async def krzelo_evening(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
+
     await send_image(
         channel,
         f"{user.mention} Gratulacje! Właśnie odjebałeś podwójną zmianę jak typowy Ukr! 🧑‍🦽‍➡️",
         "krzeloo.png"
     )
 
-# Automatyczne !cwel codziennie o 16:00
+# 🤡 Automatyczny !cwel — 16:00 codziennie
 @task("cwel_automatyczne", 16, 0)
 async def cwel_automatyczne(bot):
     channel = bot.get_channel(CWEL_CHANNEL_ID)
@@ -109,7 +115,7 @@ async def cwel_automatyczne(bot):
     await update_ranking(user.id)
     await channel.send(f"{user.mention}, zostałeś wybrany na cwela dnia! 💀")
 
-# Dyktando
+# ✍️ Dyktando — 18:00 codziennie
 @task("dyktando", 18, 0)
 async def dyktando(bot):
     channel = bot.get_channel(CWEL_CHANNEL_ID)
@@ -119,10 +125,14 @@ async def dyktando(bot):
 
     user = await bot.fetch_user(807664458058825729)
     tekst = random.choice(DYKTANDA)
-    await channel.send(f"{user.mention}\n{tekst}", allowed_mentions=discord.AllowedMentions(users=True))
+
+    await channel.send(
+        f"{user.mention}\n{tekst}",
+        allowed_mentions=discord.AllowedMentions(users=True)
+    )
 
 # --------------------------------------
-# URUCHAMIANIE TASKA RĘCZNIE
+# RĘCZNE URUCHAMIANIE TASKA (!tasks run)
 # --------------------------------------
 async def run_task(bot, name):
     task = find_task(name)
@@ -131,5 +141,3 @@ async def run_task(bot, name):
 
     await task["func"](bot)
     return True, f"Task `{name}` uruchomiony ręcznie"
-
-print("🕒 TERAZ:", now.strftime("%Y-%m-%d %H:%M:%S"))
