@@ -36,8 +36,11 @@ async def on_command_error(ctx, error):
         minutes = int(error.retry_after // 60)
         seconds = int(error.retry_after % 60)
         await ctx.send(
-            f"⏳ `!smaki` będzie dostępne za **{minutes}m {seconds}s**"
+            f"⏳ Spokojnie! `!smaki` będzie dostępne za **{minutes}m {seconds}s**."
         )
+        return
+
+    raise error
 
 cmd.setup(bot)
 bot.run(os.getenv("TOKEN"))
