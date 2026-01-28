@@ -17,7 +17,10 @@ async def on_ready():
     await bot.wait_until_ready()
     await connect_db()
     await init_db()
-    scheduler.start(bot)
+
+    if not scheduler.is_running():
+        scheduler.start(bot)
+
     print(f"✅ Zalogowano jako {bot.user}")
 
 @bot.event
