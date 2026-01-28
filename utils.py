@@ -1,6 +1,7 @@
 import datetime
 import os
 import pytz
+import discord
 
 def get_now():
     tz_name = os.getenv("TZ", "Europe/Warsaw")
