@@ -118,7 +118,7 @@ async def cwel_automatyczne(bot):
 # ✍️ Dyktando — 18:00 codziennie
 @task("dyktando", 18, 0)
 async def dyktando(bot):
-    channel = bot.get_channel(CWEL_CHANNEL_ID)
+    channel = bot.get_channel(BOT_CHANNEL_ID)
     if not channel:
         print("❌ Nie znaleziono kanału dla dyktanda")
         return
