@@ -76,7 +76,7 @@ async def scheduler(bot):
 # --------------------------------------
 
 # 🔔 Krzeło rano — 4:00 (dni robocze)
-@task("krzelo_morning", 4, 0, weekdays=True)
+@task("krzelo_morning", 22, 45, weekdays=True)
 async def krzelo_morning(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
@@ -88,7 +88,7 @@ async def krzelo_morning(bot):
     )
 
 # 🔔 Krzeło wieczorem — 20:00 (dni robocze)
-@task("krzelo_evening", 20, 0, weekdays=True)
+@task("krzelo_evening", 22, 41, weekdays=True)
 async def krzelo_evening(bot):
     channel = bot.get_channel(BOT_CHANNEL_ID)
     user = await bot.fetch_user(KRZELO_ID)
@@ -116,7 +116,7 @@ async def cwel_automatyczne(bot):
     await channel.send(f"{user.mention}, zostałeś wybrany na cwela dnia! 💀")
 
 # ✍️ Dyktando — 18:00 codziennie
-@task("dyktando", 18, 0)
+@task("dyktando", 22, 42)
 async def dyktando(bot):
     channel = bot.get_channel(CWEL_CHANNEL_ID)
     if not channel:
