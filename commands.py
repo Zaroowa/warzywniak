@@ -9,6 +9,7 @@ from scheduler import get_tasks, find_task, run_task
 ALLOWED_ROLE_NAMES = ["Rada", "Fuhrer"]
 ALLOWED_USER_IDS = [388975847396081675]
 CWEL_CHANNEL_ID = 1303471531560796180
+SMAKI_CHANNEL_ID = 1325976696788353165
 
 # ---------------------- KOMENDY ----------------------
 
@@ -34,10 +35,16 @@ async def cwel(ctx):
 # --- !SMAKI ---
 @commands.cooldown(1, 3600, commands.BucketType.user)
 async def smaki(ctx):
+    # --- sprawdzenie kanału ---
+    if ctx.channel.id != SMAKI_CHANNEL_ID:
+        await ctx.send(f"❌ Komenda `!smaki` działa tylko na tym kanale: <#{SMAKI_CHANNEL_ID}>")
+        return
+
+    # --- osoby uprzywilejowane ---
     has_role = any(role.name in ALLOWED_ROLE_NAMES for role in ctx.author.roles)
     has_user = ctx.author.id in ALLOWED_USER_IDS
 
-    # 🔥 UPRZYWILEJOWANI = BRAK COOLDOWNU
+    # uprzywilejowani nie mają cooldownu
     if has_role or has_user:
         ctx.command.reset_cooldown(ctx)
 
