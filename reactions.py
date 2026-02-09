@@ -11,7 +11,15 @@ async def handle_reactions(bot, message):
             await message.channel.send(file=discord.File(image_path))
         else:
             await message.channel.send("🖼️ Nie znaleziono pliku igor.gif!")
-
+            
+    # --- BUŁKASZ ---
+    elif content == ["nie pytaj co się działo o 6 rano w piątek", "nie pytaj co sie dzialo o 6 rano w piatek"]:
+        image_path = "hanwan.png"
+        if os.path.exists(image_path):
+            await message.channel.send(file=discord.File(image_path))
+        else:
+            await message.channel.send("🖼️ Nie znaleziono pliku hanwan.png!")
+            
     # --- CRY ---
     elif content == "cry":
         image_path = "cry.gif"
