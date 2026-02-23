@@ -25,7 +25,7 @@ def setup(bot):
         has_user = ctx.author.id in ALLOWED_USER_IDS
 
         if not has_role and not has_user:
-            await ctx.send("Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELE!** 💀🔥")
+            await ctx.send("Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELAMI!** 💀🔥")
             return
 
         # 🟡 SPECJALNY PRZYPADEK
