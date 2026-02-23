@@ -20,14 +20,12 @@ async def cwel(ctx):
         return
 
     if ctx.author.id not in ALLOWED_USERS:
-        await ctx.send("❌ Nie masz uprawnień do używania tej komendy!")
+        await ctx.send("Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELE!** 💀🔥")
         return
 
     # 🟡 SPECJALNY PRZYPADEK
     if ctx.author.id == SPECIAL_USER_ID:
-        await ctx.send(
-            "👑 Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELE!** 💀🔥"
-        )
+        await ctx.send(f"<@{393531629731315722}>, zostałeś wybrany na cwela dnia! 💀" )
         return
 
     # 🔴 NORMALNE LOSOWANIE
