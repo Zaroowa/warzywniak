@@ -16,12 +16,15 @@ SPECIAL_USER_ID = 393531629731315722
 def setup(bot):
 
     # ---------------------- !CWEL ----------------------
-    @bot.command()
+  @bot.command()
     async def cwel(ctx):
         if ctx.channel.id != CWEL_CHANNEL_ID:
             return
 
-        if ctx.author.id not in ALLOWED_USER_IDS:
+        has_role = any(r.name in ALLOWED_ROLE_NAMES for r in ctx.author.roles)
+        has_user = ctx.author.id in ALLOWED_USER_IDS
+
+        if not has_role and not has_user:
             await ctx.send("Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELE!** 💀🔥")
             return
 
@@ -31,7 +34,11 @@ def setup(bot):
             return
 
         # 🔴 NORMALNE LOSOWANIE
-        members = [m for m in ctx.guild.members if not m.bot]
+        members = [
+            m for m in ctx.guild.members
+            if not m.bot and m.id != ctx.author.id
+        ]
+
         if not members:
             await ctx.send("Brak użytkowników do pingnięcia.")
             return
