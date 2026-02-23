@@ -16,7 +16,7 @@ SPECIAL_USER_ID = 393531629731315722
 def setup(bot):
 
     # ---------------------- !CWEL ----------------------
-  @bot.command()
+    @bot.command()
     async def cwel(ctx):
         if ctx.channel.id != CWEL_CHANNEL_ID:
             return
@@ -108,7 +108,9 @@ def setup(bot):
                 return
 
             task["enabled"] = action == "on"
-            await ctx.send(f"✅ Task `{task_name}` {'włączony' if task['enabled'] else 'wyłączony'}")
+            await ctx.send(
+                f"✅ Task `{task_name}` {'włączony' if task['enabled'] else 'wyłączony'}"
+            )
             return
 
         if action == "run" and task_name:
