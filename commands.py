@@ -10,27 +10,39 @@ ALLOWED_ROLE_NAMES = ["Rada", "Fuhrer"]
 ALLOWED_USER_IDS = [388975847396081675]
 CWEL_CHANNEL_ID = 1303471531560796180
 SMAKI_CHANNEL_ID = 1325976696788353165
+SPECIAL_USER_ID = 393531629731315722
 
 # ---------------------- KOMENDY ----------------------
 
-# --- !CWEL ---
+@bot.command()
 async def cwel(ctx):
     if ctx.channel.id != CWEL_CHANNEL_ID:
-        await ctx.send(f"❌ Komenda `!cwel` działa tylko na tym kanale: <#{CWEL_CHANNEL_ID}>!")
         return
 
-    has_role = any(role.name in ALLOWED_ROLE_NAMES for role in ctx.author.roles)
-    has_user = ctx.author.id in ALLOWED_USER_IDS
-
-    if not has_role and not has_user:
+    if ctx.author.id not in ALLOWED_USERS:
         await ctx.send("❌ Nie masz uprawnień do używania tej komendy!")
         return
 
-    members = [m for m in ctx.guild.members if not m.bot]
-    user = random.choice(members)
+    # 🟡 SPECJALNY PRZYPADEK
+    if ctx.author.id == SPECIAL_USER_ID:
+        await ctx.send(
+            "👑 Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELE!** 💀🔥"
+        )
+        return
 
-    await update_ranking(user.id)
-    await ctx.send(f"{user.mention}, zostałeś wybrany na cwela dnia! 💀")
+    # 🔴 NORMALNE LOSOWANIE
+    guild = ctx.guild
+    members = [m for m in guild.members if not m.bot]
+    if not members:
+        await ctx.send("Brak użytkowników do pingnięcia.")
+        return
+
+    losowy = random.choice(members)
+
+    if db_pool:
+        await update_ranking(losowy.id)
+
+    await ctx.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia! 💀")
 
 # --- !SMAKI ---
 @commands.cooldown(1, 3600, commands.BucketType.user)
