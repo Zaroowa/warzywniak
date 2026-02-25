@@ -22,32 +22,32 @@ def setup(bot):
             return
 
         # 🟡 SPECJALNY PRZYPADEK — NA SAMYM POCZĄTKU
-    if ctx.author.id == SPECIAL_USER_ID:
-        await ctx.send(f"<@{SPECIAL_USER_ID}>, zostałeś wybrany na cwela dnia! 💀")
-        return
+        if ctx.author.id == SPECIAL_USER_ID:
+            await ctx.send(f"<@{SPECIAL_USER_ID}>, zostałeś wybrany na cwela dnia! 💀")
+            return
 
-    has_role = any(r.name in ALLOWED_ROLE_NAMES for r in ctx.author.roles)
-    has_user = ctx.author.id in ALLOWED_USER_IDS
+        has_role = any(r.name in ALLOWED_ROLE_NAMES for r in ctx.author.roles)
+        has_user = ctx.author.id in ALLOWED_USER_IDS
 
-    # 🔒 BLOKADA
-    if not has_role and not has_user:
-        await ctx.send("Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELAMI!** 💀🔥")
-        return
+        # 🔒 BLOKADA
+        if not has_role and not has_user:
+            await ctx.send("Ty nie losujesz cwela — **TY JESTEŚ CWELEM NAD CWELAMI!** 💀🔥")
+            return
 
-    # 🔴 NORMALNE LOSOWANIE
-    members = [
-        m for m in ctx.guild.members
-        if not m.bot and m.id != ctx.author.id
-    ]
+        # 🔴 NORMALNE LOSOWANIE
+        members = [
+            m for m in ctx.guild.members
+            if not m.bot and m.id != ctx.author.id
+        ]
 
-    if not members:
-        await ctx.send("Brak użytkowników do pingnięcia.")
-        return
+        if not members:
+            await ctx.send("Brak użytkowników do pingnięcia.")
+            return
 
-    losowy = random.choice(members)
-    await update_ranking(losowy.id)
+        losowy = random.choice(members)
+        await update_ranking(losowy.id)
 
-    await ctx.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia! 💀")
+        await ctx.send(f"{losowy.mention}, zostałeś wybrany na cwela dnia! 💀")
 
     # ---------------------- !SMAKI ----------------------
     @bot.command()
