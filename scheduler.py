@@ -130,7 +130,31 @@ async def dyktando(bot):
         f"{user.mention}\n{tekst}",
         allowed_mentions=discord.AllowedMentions(users=True)
     )
+    
+# 🔔 Automatyczne odmutowanie — 9:00 codziennie
+@task("autountimeout", 8, 15)
+async def autountimeout(bot):
+    GUILD_ID = 1292140494314274936  # <-- wklej ID serwera
+    USER_ID = 388975847396081675   # <-- ID użytkownika do odmutowania
+    CHANNEL_ID = 1325976696788353165  # <-- ID kanału do powiadomienia
 
+    guild = bot.get_guild(GUILD_ID)
+    if not guild:
+        print("❌ Nie znaleziono guild")
+        return
+
+    member = guild.get_member(USER_ID)
+    if not member:
+        print("❌ Nie znaleziono członka")
+        return
+
+    # Odmutowanie
+    await member.timeout(None)
+
+    # Powiadomienie na kanale
+    channel = bot.get_channel(CHANNEL_ID)
+    if channel:
+        await channel.send(f"{member.mention} został automatycznie odmutowany 🔊")
 # --------------------------------------
 # RĘCZNE URUCHAMIANIE TASKA (!tasks run)
 # --------------------------------------
