@@ -9,6 +9,8 @@ from db import connect_db, init_db
 from reactions import handle_reactions
 import commands as cmd
 
+GUILD_ID = 1292140494314274936
+
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -18,7 +20,8 @@ async def on_ready():
     await connect_db()
     await init_db()
 
-    await bot.tree.sync()
+    guild = discord.Object(id=GUILD_ID)
+    await bot.tree.sync(guild=guild)
     
     if not scheduler.is_running():
         scheduler.start(bot)
