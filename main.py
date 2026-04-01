@@ -18,6 +18,8 @@ async def on_ready():
     await connect_db()
     await init_db()
 
+    await bot.tree.sync()
+    
     if not scheduler.is_running():
         scheduler.start(bot)
 
