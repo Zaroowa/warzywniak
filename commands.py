@@ -155,5 +155,17 @@ async def swaprole(
             return
 
         await ctx.send("❓ Użycie: `!tasks`, `!tasks on/off <nazwa>`, `!tasks run <nazwa>`")
+
+        @bot.tree.command(
+        name="swaprole",
+        description="Usuń jedną rolę i dodaj drugą",
+        guild=discord.Object(id=GUILD_ID)
+    )
+        async def swaprole(
+        interaction: discord.Interaction,
+        user: discord.Member,
+        role_remove: discord.Role,
+        role_add: discord.Role
+    ):
     
     print("🧩 setup(bot) URUCHOMIONY")
