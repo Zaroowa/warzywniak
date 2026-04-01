@@ -120,4 +120,31 @@ def setup(bot):
 
         await ctx.send("❓ Użycie: `!tasks`, `!tasks on/off <nazwa>`, `!tasks run <nazwa>`")
 
+    # ---------------------- !SWAPROLE ----------------------
+    @bot.command()
+    async def swaprole(ctx, user: discord.Member, role_remove: discord.Role, role_add: discord.Role):
+        has_role = any(r.name in ALLOWED_ROLE_NAMES for r in ctx.author.roles)
+        has_user = ctx.author.id in ALLOWED_USER_IDS
+
+        if not has_role and not has_user:
+            await ctx.send("❌ Nie masz uprawnień do tej komendy.")
+            return
+
+        # sprawdzanie hierarchii
+        if role_remove >= ctx.guild.me.top_role or role_add >= ctx.guild.me.top_role:
+            await ctx.send("❌ Bot nie może zarządzać jedną z tych ról.")
+            return
+
+        if role_remove in user.roles:
+            await user.remove_roles(role_remove)
+
+        if role_add not in user.roles:
+            await user.add_roles(role_add)
+
+        await ctx.send(
+            f"🔄 {user.mention}\n"
+            f"❌ usunięto: **{role_remove.name}**\n"
+            f"✅ dodano: **{role_add.name}**"
+        )
+    
     print("🧩 setup(bot) URUCHOMIONY")
