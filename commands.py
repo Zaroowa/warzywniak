@@ -62,7 +62,92 @@ def setup(bot):
             f"❌ usunięto: **{role_remove.name}**\n"
             f"✅ dodano: **{role_add.name}**"
         )
+        
+        # ---------------------- /ADDROLE ----------------------
+    @bot.tree.command(
+        name="addrole",
+        description="Dodaj rolę użytkownikowi",
+        guild=discord.Object(id=GUILD_ID)
+    )
+    async def addrole(
+        interaction: discord.Interaction,
+        user: discord.Member,
+        role: discord.Role
+    ):
 
+        has_role = any(r.name in ALLOWED_ROLE_NAMES for r in interaction.user.roles)
+        has_user = interaction.user.id in ALLOWED_USER_IDS
+
+        if not has_role and not has_user:
+            await interaction.response.send_message(
+                "❌ Nie masz uprawnień.",
+                ephemeral=True
+            )
+            return
+
+        if role >= interaction.guild.me.top_role:
+            await interaction.response.send_message(
+                "❌ Ta rola jest wyżej niż rola bota.",
+                ephemeral=True
+            )
+            return
+
+        if role in user.roles:
+            await interaction.response.send_message(
+                "⚠️ Użytkownik już ma tę rolę.",
+                ephemeral=True
+            )
+            return
+
+        await user.add_roles(role)
+
+        await interaction.response.send_message(
+            f"✅ {user.mention} otrzymał rolę **{role.name}**"
+        )
+
+
+    # ---------------------- /UNROLE ----------------------
+    @bot.tree.command(
+        name="unrole",
+        description="Usuń rolę użytkownikowi",
+        guild=discord.Object(id=GUILD_ID)
+    )
+    async def unrole(
+        interaction: discord.Interaction,
+        user: discord.Member,
+        role: discord.Role
+    ):
+
+        has_role = any(r.name in ALLOWED_ROLE_NAMES for r in interaction.user.roles)
+        has_user = interaction.user.id in ALLOWED_USER_IDS
+
+        if not has_role and not has_user:
+            await interaction.response.send_message(
+                "❌ Nie masz uprawnień.",
+                ephemeral=True
+            )
+            return
+
+        if role >= interaction.guild.me.top_role:
+            await interaction.response.send_message(
+                "❌ Ta rola jest wyżej niż rola bota.",
+                ephemeral=True
+            )
+            return
+
+        if role not in user.roles:
+            await interaction.response.send_message(
+                "⚠️ Użytkownik nie ma tej roli.",
+                ephemeral=True
+            )
+            return
+
+        await user.remove_roles(role)
+
+        await interaction.response.send_message(
+            f"❌ Usunięto rolę **{role.name}** od {user.mention}"
+        )
+        
     # ---------------------- !CWEL ----------------------
     @bot.command()
     async def cwel(ctx):
